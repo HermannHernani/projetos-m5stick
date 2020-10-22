@@ -7,28 +7,7 @@ DHT12 dht12;
 int battery = 0;
 float b = 0;
 int state = 1;
-
-
-void setup() {
-  // put your setup code here, to run once:
-  M5.begin();
-  Wire.begin(0,26);
-  M5.Lcd.setRotation(1);
-  M5.Lcd.fillScreen(BLACK);
-  M5.Lcd.setCursor(0, 0, 2);
-  M5.Lcd.println("TRACKER 2 ");
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  float tmp = dht12.readTemperature();
-  float hum = dht12.readHumidity();
-  M5.Lcd.setCursor(0, 20, 2);
-  M5.Lcd.printf("Temp: %2.1f", tmp);
-  M5.Lcd.setCursor(0, 40, 2);
-  M5.Lcd.printf("Humi: %2.0f%%", hum);
-  batteryPercent();
-}
+bool LCD = true;
 
 void batteryPercent() {
   M5.Lcd.setCursor(115, 2);
@@ -46,5 +25,42 @@ void batteryPercent() {
     M5.Axp.DeepSleep();
   M5.Lcd.print(battery);
   M5.Lcd.print("%");
+}
 
+void buttons_code() {
+  // Button A control the LCD (ON/OFF)
+  if (M5.BtnA.wasPressed()) {
+    if (LCD) {
+      M5.Lcd.writecommand(ST7735_DISPOFF);
+      M5.Axp.ScreenBreath(0);
+      LCD = !LCD;
+    } else {
+      M5.Lcd.writecommand(ST7735_DISPON);
+      M5.Axp.ScreenBreath(10);
+      LCD = !LCD;
+    }
+  }
+}
+
+void setup() {
+  // put your setup code here, to run once:
+  M5.begin();
+  Wire.begin(0,26);
+  M5.Lcd.setRotation(1);
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setCursor(0, 0, 2);
+  M5.Lcd.println("V0.3");
+}
+
+void loop() {
+  M5.update();
+  buttons_code();
+  // put your main code here, to run repeatedly:
+  float tmp = dht12.readTemperature();
+  float hum = dht12.readHumidity();
+  M5.Lcd.setCursor(0, 20, 2);
+  M5.Lcd.printf("Temp: %2.1f", tmp);
+  M5.Lcd.setCursor(0, 40, 2);
+  M5.Lcd.printf("Humi: %2.0f%%", hum);
+  batteryPercent();
 }

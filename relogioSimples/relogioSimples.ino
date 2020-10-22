@@ -3,8 +3,8 @@
 #include "time.h"
 
 //WiFi credentials
-char* ssid       = "LUDUS-KAM";
-char* password   = "ludusKAM123"; 
+char* ssid       = "JACQUES HERNANI_2G";
+char* password   = "Hera2908"; 
 
 // ntp Server that is used for timesync
 char* ntpServer =  "de.pool.ntp.org";
